@@ -1,1 +1,17 @@
 /.hintrc
+
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Node / Next (frontend has its own .gitignore too)
+node_modules/
+.next/
+
+# Archived legacy Node backend deps
+legacy/backend-node/node_modules/
+
+# Env
+.env
+.env.local

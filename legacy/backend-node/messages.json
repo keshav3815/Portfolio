@@ -12,12 +12,5 @@
     "subject": "Customer",
     "message": "hello developer",
     "timestamp": "2026-01-17T08:37:14.261Z"
-  },
-  {
-    "name": "Test",
-    "email": "t@example.com",
-    "subject": "Hi",
-    "message": "Testing FastAPI",
-    "timestamp": "2026-07-06T16:42:32.202969+00:00"
   }
 ]

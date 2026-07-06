@@ -51,45 +51,53 @@ function generateChatResponse(userMessage) {
 
     // About Keshav
     if (msg.includes('who are you') || msg.includes('about keshav') || msg.includes('tell me about yourself') || msg.includes('who is keshav')) {
-        return "I'm Keshav Singh, a passionate web developer and GenAI engineer. I specialize in creating beautiful, functional websites with clean code and modern design principles. I love bringing ideas to life through technology!";
+        return "I'm Keshav Singh — an AI engineer and full-stack Web3 developer. I build modern apps with Next.js and FastAPI, ship RAG systems and AI agents across the LLM ecosystem, and craft on-chain experiences with Solidity and Web3. I love bringing ideas to life through technology!";
     }
 
     // Specific projects (put these first for more specific matching)
-    if (msg.includes('dailyjob') || msg.includes('job marketplace')) {
-        return "DailyJob is Keshav's job marketplace platform where employers can post jobs and job seekers can find opportunities. It features user authentication, job posting, application tracking, and a modern, responsive design.";
+    if (msg.includes('apc') || msg.includes('ngo') || msg.includes('community')) {
+        return "APC is a community-driven NGO engagement platform Keshav built with Next.js, React, FastAPI, WebSockets, and Tailwind CSS. It manages members, volunteers, books, and initiatives, with role-based onboarding, contribution tracking, and real-time engagement dashboards.";
     }
 
     if (msg.includes('trv') || msg.includes('technologies') || msg.includes('trv technologies')) {
         return "Keshav developed the official website for TRV Technologies LLP, showcasing their services, portfolio, and contact information. The site features a professional design with smooth animations and responsive layout.";
     }
 
-    if (msg.includes('freequademy') || msg.includes('kanban') || msg.includes('productivity')) {
-        return "Freequademy is Keshav's Kanban-based productivity tool that helps users organize tasks and manage workflows efficiently. It includes drag-and-drop functionality, task categorization, and progress tracking.";
+    if (msg.includes('freequademy') || msg.includes('learning platform')) {
+        return "Freequademy is Keshav's AI-powered learning platform built with Next.js, FastAPI, LangChain, LlamaIndex, and RAG. It offers free learning resources, mentorship, and community features, plus a RAG-based AI chatbot that answers queries from uploaded notes, PDFs, and syllabus documents, along with MCQ generation and LLM-powered content summarisation.";
     }
 
-    // Specific skills and technologies
-    if (msg.includes('html') || msg.includes('css') || msg.includes('javascript') || msg.includes('js')) {
-        return "Keshav is highly proficient in HTML5, CSS3, and JavaScript. He creates responsive, modern web interfaces using these core technologies along with frameworks like Bootstrap for styling and jQuery for enhanced interactivity.";
+    // Frontend
+    if (msg.includes('next') || msg.includes('frontend') || msg.includes('shadcn') || msg.includes('framer') || msg.includes('tailwind') || msg.includes('typescript')) {
+        return "On the frontend, Keshav builds with Next.js, React, and TypeScript, styled with Tailwind CSS and shadcn/ui, and brings interfaces to life with Framer Motion animations. He focuses on fast, accessible, production-grade UIs.";
+    }
+
+    if (msg.includes('react') || msg.includes('component')) {
+        return "Keshav builds component-driven UIs with React and Next.js in TypeScript, using shadcn/ui for polished components and Framer Motion for animation. He ships responsive, server-rendered apps with great UX.";
+    }
+
+    // Backend
+    if (msg.includes('fastapi') || msg.includes('backend') || msg.includes('websocket') || msg.includes('streaming') || msg.includes('sse') || msg.includes('rest')) {
+        return "For backends, Keshav uses FastAPI with Python to build fast REST APIs, real-time WebSocket services, and SSE token streaming for AI responses. He focuses on clean, scalable, well-typed server code.";
     }
 
     if (msg.includes('python')) {
-        return "Keshav uses Python for backend development, data processing, and AI/ML projects. He's experienced with frameworks like Flask and Django, and uses Python for automation and scripting tasks.";
+        return "Python is core to Keshav's backend and AI work. He builds high-performance APIs with FastAPI and uses Python across his RAG pipelines, AI agents, and LLM integrations.";
     }
 
-    if (msg.includes('react') || msg.includes('vue') || msg.includes('angular')) {
-        return "Keshav works with modern JavaScript frameworks including React.js and Vue.js. He builds dynamic, component-based user interfaces and single-page applications using these technologies.";
+    // Blockchain / Web3 (checked before AI: "blockchain" contains the substring "ai")
+    if (msg.includes('blockchain') || msg.includes('web3') || msg.includes('solidity') || msg.includes('smart contract') || msg.includes('nft') || msg.includes('defi') || msg.includes('dao') || msg.includes('ethereum') || msg.includes('metamask') || msg.includes('hardhat') || msg.includes('erc20')) {
+        return "On the Web3 side, Keshav writes smart contracts in Solidity (developed and tested with Hardhat), integrates them into apps with Ethers.js and MetaMask, and works with NFTs, ERC20 tokens, DeFi, and DAO patterns.";
     }
 
-    if (msg.includes('node') || msg.includes('express') || msg.includes('backend')) {
-        return "For backend development, Keshav uses Node.js with Express.js to create robust server-side applications. He builds RESTful APIs and handles server-side logic efficiently.";
+    // AI Stack
+    if (msg.includes('ai') || msg.includes('genai') || msg.includes('llm') || msg.includes('langchain') || msg.includes('llama') || msg.includes('ollama') || msg.includes('gemini') || msg.includes('openai') || msg.includes('agent') || msg.includes('mcp') || msg.includes('vllm') || msg.includes('rag')) {
+        return "AI is Keshav's core focus. He builds RAG systems, AI agents, and multi-agent workflows using LangChain and LlamaIndex, runs models via Ollama, vLLM, the OpenAI API, and Google Gemini, and connects tools through the Model Context Protocol (MCP).";
     }
 
-    if (msg.includes('laravel') || msg.includes('php')) {
-        return "Keshav has experience with Laravel (PHP framework) for building scalable web applications. He uses it for rapid application development and maintains clean, organized code.";
-    }
-
-    if (msg.includes('ai') || msg.includes('genai') || msg.includes('llm') || msg.includes('langchain')) {
-        return "Keshav is passionate about Generative AI and Large Language Models. He works with technologies like LangChain to build AI-powered applications and integrates AI capabilities into web projects.";
+    // Crypto APIs
+    if (msg.includes('crypto') || msg.includes('coingecko') || msg.includes('coinmarketcap') || msg.includes('binance') || msg.includes('tradingview') || msg.includes('market data') || msg.includes('trading')) {
+        return "For live crypto market data, Keshav integrates the CoinGecko, CoinMarketCap, and Binance APIs, and embeds TradingView widgets for real-time charts inside his Web3 dashboards.";
     }
 
     if (msg.includes('database') || msg.includes('mysql') || msg.includes('mongodb')) {
@@ -100,17 +108,13 @@ function generateChatResponse(userMessage) {
         return "Keshav uses Git for version control and maintains his projects on GitHub. You can check out his repositories at https://github.com/keshav3815 to see his coding style and contributions.";
     }
 
-    if (msg.includes('docker') || msg.includes('aws') || msg.includes('cloud')) {
-        return "Keshav has experience with containerization using Docker and cloud platforms like AWS. He deploys applications efficiently and manages infrastructure for scalable solutions.";
-    }
-
     // Experience and background
     if (msg.includes('experience') || msg.includes('background') || msg.includes('work experience')) {
-        return "Keshav has experience in full-stack web development, creating responsive websites and web applications. He's worked on various projects including job marketplaces, business websites, and productivity tools. He's always eager to learn new technologies and take on challenging projects.";
+        return "Keshav has hands-on experience across full-stack web development, applied Generative AI, and Web3. He's built an AI-powered learning platform, a community NGO platform, and a corporate website, and enjoys taking on challenging, real-world projects.";
     }
 
     if (msg.includes('education') || msg.includes('degree') || msg.includes('study') || msg.includes('college')) {
-        return "Keshav is pursuing his education in Computer Science/Engineering and continuously expanding his knowledge through online courses, tutorials, and practical projects. He believes in lifelong learning and staying updated with the latest technologies.";
+        return "Keshav is pursuing a Bachelor of Engineering in Computer Science at Chandigarh University, India (2022–2026). He continuously expands his knowledge through certifications (NPTEL, SWAYAM, Infosys Springboard) and hands-on projects, and believes in lifelong learning.";
     }
 
     // Contact and hiring
@@ -127,13 +131,13 @@ function generateChatResponse(userMessage) {
     }
 
     // General skills
-    if (msg.includes('skill') || msg.includes('technology') || msg.includes('programming') || msg.includes('expertise')) {
-        return "Keshav is proficient in HTML5, CSS3, JavaScript, Python, and works with frameworks like React, Vue.js, Laravel, Node.js, and Bootstrap. He also has experience with AI technologies like LLM and Langchain, and tools like Git, Docker, AWS, and MySQL.";
+    if (msg.includes('skill') || msg.includes('technology') || msg.includes('programming') || msg.includes('expertise') || msg.includes('stack') || msg.includes('tech')) {
+        return "Keshav's stack spans four areas: Frontend (Next.js, React, TypeScript, Tailwind CSS, Framer Motion, shadcn/ui), Backend (FastAPI, Python, REST APIs, WebSockets, SSE streaming), AI (LangChain, LlamaIndex, Ollama, OpenAI, Google Gemini, vLLM, MCP, AI agents, RAG, multi-agent systems), and Web3 (Solidity, Hardhat, Ethers.js, MetaMask, smart contracts, NFTs, DeFi, DAOs) — plus live crypto data via CoinGecko, CoinMarketCap, Binance, and TradingView.";
     }
 
     // Projects general
     if (msg.includes('project') || msg.includes('work') || msg.includes('portfolio')) {
-        return "Keshav has worked on several exciting projects including DailyJob (a job marketplace), TRV Technologies LLP website, and Freequademy (a Kanban-based productivity tool). Check out his projects section here: <a href='#projects'>Projects</a>.";
+        return "Keshav has worked on several exciting projects including Freequademy (an AI-powered learning platform with a RAG chatbot), the TRV Technologies LLP corporate website, and APC (a community & NGO engagement platform). Check out his projects section here: <a href='#projects'>Projects</a>.";
     }
 
     // Location

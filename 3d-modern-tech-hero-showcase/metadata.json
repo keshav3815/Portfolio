@@ -1,0 +1,6 @@
+{
+  "name": "3D Modern Tech Hero Showcase",
+  "description": "A vibrant, 3D landing page hero section showcasing core product features, value propositions, interactive architecture, and tech branding.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

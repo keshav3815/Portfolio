@@ -52,7 +52,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MESSAGES_FILE = Path(__file__).parent / "messages.json"
+# On a read-only/ephemeral host (Vercel & other serverless), point this at a
+# writable path such as /tmp/messages.json. Note that such storage does NOT
+# survive cold starts — use a real database for durable contact submissions.
+MESSAGES_FILE = Path(
+    os.getenv("MESSAGES_FILE", str(Path(__file__).parent / "messages.json"))
+)
 _messages_lock = threading.Lock()
 
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")

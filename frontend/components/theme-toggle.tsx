@@ -1,30 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
-
   function toggle() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    const isDark = document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", !isDark);
     try {
-      localStorage.setItem("theme", next ? "dark" : "light");
+      localStorage.setItem("theme", isDark ? "light" : "dark");
     } catch {
       /* ignore */
     }
   }
 
+  // Which glyph shows is driven purely by the `.dark` class via CSS, so it's
+  // correct on first paint (no state, no effect, no hydration flash).
   return (
     <Button
       variant="ghost"
@@ -32,11 +24,8 @@ export function ThemeToggle() {
       aria-label="Toggle theme"
       onClick={toggle}
     >
-      {mounted && dark ? (
-        <Sun className="size-5" />
-      ) : (
-        <Moon className="size-5" />
-      )}
+      <Moon className="size-5 dark:hidden" />
+      <Sun className="hidden size-5 dark:block" />
     </Button>
   );
 }

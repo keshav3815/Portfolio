@@ -22,6 +22,7 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -29,6 +30,14 @@ export function ChatWidget() {
       behavior: "smooth",
     });
   }, [messages, open]);
+
+  // Cancel any in-flight stream when the widget unmounts.
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  function close() {
+    abortRef.current?.abort();
+    setOpen(false);
+  }
 
   async function send(e: FormEvent) {
     e.preventDefault();
@@ -39,18 +48,26 @@ export function ChatWidget() {
     setBusy(true);
     setMessages((m) => [...m, { role: "user", text }, { role: "bot", text: "" }]);
 
+    const ac = new AbortController();
+    abortRef.current = ac;
+
     try {
-      await streamChat(text, (delta) => {
-        setMessages((m) => {
-          const next = [...m];
-          next[next.length - 1] = {
-            role: "bot",
-            text: next[next.length - 1].text + delta,
-          };
-          return next;
-        });
-      });
-    } catch {
+      await streamChat(
+        text,
+        (delta) => {
+          setMessages((m) => {
+            const next = [...m];
+            next[next.length - 1] = {
+              role: "bot",
+              text: next[next.length - 1].text + delta,
+            };
+            return next;
+          });
+        },
+        ac.signal
+      );
+    } catch (err) {
+      if (ac.signal.aborted || (err as Error)?.name === "AbortError") return;
       setMessages((m) => {
         const next = [...m];
         next[next.length - 1] = {
@@ -60,6 +77,7 @@ export function ChatWidget() {
         return next;
       });
     } finally {
+      if (abortRef.current === ac) abortRef.current = null;
       setBusy(false);
     }
   }
@@ -85,7 +103,7 @@ export function ChatWidget() {
               </div>
               <button
                 aria-label="Close chat"
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="rounded-md p-1 hover:bg-white/20"
               >
                 <X className="size-4" />
@@ -136,7 +154,7 @@ export function ChatWidget() {
       <Button
         size="icon"
         aria-label="Open chat"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => (open ? close() : setOpen(true))}
         className="fixed bottom-5 right-5 z-50 size-14 rounded-full shadow-lg"
       >
         {open ? <X className="size-6" /> : <MessageCircle className="size-6" />}

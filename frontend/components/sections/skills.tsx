@@ -13,7 +13,7 @@ export function Skills() {
         <SectionHeading
           eyebrow="My Abilities"
           title="Technical Skills"
-          subtitle="The stack I use to build across frontend, backend, AI, and Web3."
+          subtitle="The stack I use to build backend services, GenAI systems, and full-stack web apps."
         />
 
         <div className="grid justify-center gap-6 sm:grid-cols-2 lg:grid-cols-3">

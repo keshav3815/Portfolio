@@ -10,14 +10,14 @@ type Particle = {
   radius: number;
 };
 
+const FALLBACK_RGB = "99, 102, 241";
+
 export function ParticleNetwork() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const colorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const colorProbe = colorRef.current;
-    if (!canvas || !colorProbe) return;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -25,14 +25,16 @@ export function ParticleNetwork() {
     let height = 0;
     let particles: Particle[] = [];
     let animationFrameId: number;
-    let particleRgb = "99, 102, 241";
+    let particleRgb = FALLBACK_RGB;
 
+    // Canvas 2D can't parse oklch(), and getComputedStyle() now returns the
+    // oklch() string verbatim — so read a dedicated sRGB-channel token instead.
     const readParticleColor = () => {
-      const computed = getComputedStyle(colorProbe).color;
-      const match = computed.match(/\d+(\.\d+)?/g);
-      if (match && match.length >= 3) {
-        particleRgb = `${match[0]}, ${match[1]}, ${match[2]}`;
-      }
+      const raw = getComputedStyle(document.documentElement)
+        .getPropertyValue("--particle-rgb")
+        .trim();
+      const parts = raw.split(/[\s,]+/).filter(Boolean);
+      particleRgb = parts.length >= 3 ? parts.slice(0, 3).join(", ") : FALLBACK_RGB;
     };
 
     const resize = () => {
@@ -84,7 +86,7 @@ export function ParticleNetwork() {
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
+        if (dist > 0.001 && dist < 130) {
           const force = (130 - dist) / 130;
           p.x -= (dx / dist) * force * 0.5;
           p.y -= (dy / dist) * force * 0.5;
@@ -110,8 +112,9 @@ export function ParticleNetwork() {
     resize();
     draw();
 
+    const parent = canvas.parentElement;
     const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(canvas.parentElement!);
+    if (parent) resizeObserver.observe(parent);
 
     const themeObserver = new MutationObserver(readParticleColor);
     themeObserver.observe(document.documentElement, {
@@ -132,12 +135,9 @@ export function ParticleNetwork() {
   }, []);
 
   return (
-    <>
-      <div ref={colorRef} className="hidden text-primary" aria-hidden />
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full opacity-70"
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      className="pointer-events-auto absolute inset-0 h-full w-full opacity-70"
+    />
   );
 }

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keshav Singh | AI Engineer & Full-Stack Web3 Developer",
+  title: "Keshav Singh | Gen-AI Engineer & Full-Stack Web Developer",
   description:
-    "Keshav Singh — AI engineer and full-stack Web3 developer. Building with Next.js, FastAPI, LangChain, RAG, AI agents, and Solidity.",
+    "Keshav Singh — backend and Gen-AI engineer. Building with FastAPI, PostgreSQL, Celery, LangChain, RAG, LLM orchestration, scikit-learn/XGBoost, and React/TypeScript.",
 };
 
 // Set the theme before paint to avoid a flash of the wrong color scheme.
@@ -31,6 +31,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {/* Scroll-reveal wrappers start hidden and are un-hidden by Framer
+            Motion. With JS disabled, force them visible so content still shows. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}

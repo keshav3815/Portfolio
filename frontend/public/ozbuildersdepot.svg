@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675" role="img" aria-label="Oz Builders Depot">
+  <defs>
+    <style>
+      .wm { font-family: "DM Sans", "Segoe UI", Helvetica, Arial, sans-serif; font-weight: 800; }
+    </style>
+  </defs>
+
+  <!-- sand background -->
+  <rect width="1200" height="675" fill="#f2ede4"/>
+
+  <!-- inset brass frame -->
+  <rect x="28" y="28" width="1144" height="619" rx="14" fill="none" stroke="#e6a020" stroke-opacity="0.45" stroke-width="2"/>
+
+  <!-- oversized watermark mark, bottom-right -->
+  <g transform="translate(760 250) scale(5.2)" fill="#e6a020" fill-opacity="0.08">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 48 L34 44 L34 88 L22 92 Z M42 42 L54 38 L54 94 L42 98 Z M62 58 L86 36 L98 44 L98 98 L62 98 Z M63 66 L82 43 L85 46 L66 69 Z M74 73 L86 73 L86 99 L74 99 Z"/>
+  </g>
+
+  <!-- logo lockup -->
+  <g transform="translate(300 248) scale(1.45)" fill="#e6a020">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 48 L34 44 L34 88 L22 92 Z M42 42 L54 38 L54 94 L42 98 Z M62 58 L86 36 L98 44 L98 98 L62 98 Z M63 66 L82 43 L85 46 L66 69 Z M74 73 L86 73 L86 99 L74 99 Z"/>
+  </g>
+
+  <g class="wm" text-anchor="start">
+    <text x="518" y="300" font-size="34" letter-spacing="3" fill="#1c1c1c">OZ</text>
+    <text x="516" y="362" font-size="66" letter-spacing="1" fill="#e6a020">BUILDERS</text>
+    <text x="520" y="396" font-size="24" letter-spacing="13" fill="#1c1c1c">DEPOT</text>
+  </g>
+
+  <!-- domain -->
+  <text x="600" y="600" text-anchor="middle" font-family="DM Sans, Segoe UI, Helvetica, Arial, sans-serif" font-weight="600" font-size="20" letter-spacing="5" fill="#6b6560">OZBUILDERSDEPOT.COM.AU</text>
+</svg>

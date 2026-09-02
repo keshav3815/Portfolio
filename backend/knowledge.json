@@ -1,0 +1,252 @@
+{
+  "links": {
+    "github": "https://github.com/keshav3815",
+    "linkedin": "https://www.linkedin.com/in/keshav-singh3815/",
+    "instagram": "https://www.instagram.com/thisiskeshavsingh/",
+    "email": "keshavsingh3815@gmail.com"
+  },
+  "responses": {
+    "fallback": "I'm not sure about that one, but I can tell you about Keshav's work at Simplifyai, his skills (backend, Gen-AI, data/ML, frontend), or any of his projects. What would you like to know?",
+    "weak_match": "I'm not certain what you're after — did you want to know about {options}? You can also ask about Keshav's work, skills, or projects.",
+    "merge_joiner": " Also — "
+  },
+  "smalltalk": [
+    {
+      "contains": ["how are you", "how are u", "how r you", "how's it going", "hows it going", "how is it going", "hows things", "whats up", "what's up"],
+      "answer": "Doing great, thanks! What would you like to know about Keshav?"
+    },
+    {
+      "tokens": ["thanks", "thank", "thankyou", "thx", "thnx", "ty", "cheers", "appreciated"],
+      "contains": ["thank you", "thanku"],
+      "answer": "Anytime! Anything else you'd like to know about Keshav?"
+    },
+    {
+      "tokens": ["bye", "byee", "byeee", "goodbye", "cya", "cyaa"],
+      "contains": ["see you", "see u", "see ya", "catch you later", "talk later"],
+      "answer": "Thanks for stopping by — reach out through the contact form anytime!"
+    },
+    {
+      "contains": ["what can you do", "what do you know", "what can i ask", "how can you help", "how do you work"],
+      "equals": ["help", "menu", "options"],
+      "answer": "I can answer questions about Keshav Singh — his role at Simplifyai, his backend / Gen-AI / data-ML / frontend skills, his projects (DailyJob, Freequademy, Durgam Systems, Oz Builders Depot, Spice Route, TRV Technologies, APC Bheja), education, and how to reach him."
+    },
+    {
+      "tokens": ["hi", "hii", "hiii", "hey", "heyy", "heyyy", "hello", "helloo", "hellooo", "hiya", "heya", "yo", "yoo", "namaste", "hola", "sup"],
+      "starts": ["hi ", "hii ", "hey ", "heyy ", "hello ", "helloo ", "hiya ", "good morning", "good afternoon", "good evening", "gm ", "greetings"],
+      "equals": ["greetings", "gm", "gn"],
+      "answer": "Hey! I'm Keshav's assistant. Ask me about his work at Simplifyai, his skills, or any of his projects."
+    }
+  ],
+  "topics": [
+    {
+      "id": "about",
+      "title": "who Keshav is",
+      "answer": "I'm Keshav Singh — a Gen-AI engineer and full-stack web developer. I build production FastAPI/PostgreSQL backends, async data pipelines, and RAG & LLM-orchestrated features, currently working on fintech co-lending orchestration and ML-driven financial analytics at Simplifyai, with React/TypeScript frontends end to end.",
+      "keywords": [["keshav", 1.9], ["yourself", 1.6], ["bio", 2.0], ["himself", 1.4]],
+      "aliases": ["who are you", "who is keshav", "whos keshav", "about keshav", "about him", "tell me about yourself", "introduce", "what do you do", "what does he do"]
+    },
+    {
+      "id": "experience",
+      "title": "his work at Simplifyai",
+      "answer": "Keshav is a Gen-AI Engineer at Simplifyai (Feb 2026–present), working on the SimplifyCredit platform. He owns the SimplifyJF joint-financing (co-lending) module and built large parts of SimplifyInsights, a financial-analytics & credit-scoring platform. Ask about either one for the details.",
+      "keywords": [["experience", 1.8], ["simplifyai", 3.0], ["simplify", 1.6], ["simplifycredit", 2.5], ["fintech", 2.0], ["employer", 2.0], ["job", 0.6], ["internship", 1.5]],
+      "aliases": ["where do you work", "where does he work", "current role", "current job", "work experience", "who do you work for", "work history", "professional experience", "day job", "tell me about your experience"]
+    },
+    {
+      "id": "simplifyjf",
+      "title": "the SimplifyJF co-lending module",
+      "answer": "On SimplifyJF (Simplifyai) Keshav built the joint-financing (co-lending) module — partner config, RAC/eligibility rules, order pooling and an append-only sub-ledger (~35 backend services, an 11.8k-LOC core router, 21 forward-only migrations) — plus the repayment allocation/split engine, settlement & netting, and a reconciliation workflow with break-handling using transparent statistical matching (weighted score + Jaccard). He also delivered Celery/Redis job orchestration (pool creation, TTL reservation expiry, SLA/settlement timers) and officer/partner portals on org-scoped RBAC with maker-checker approvals.",
+      "keywords": [["simplifyjf", 3.0], ["co-lending", 3.0], ["colending", 3.0], ["sub-ledger", 2.6], ["subledger", 2.6], ["reconciliation", 2.4], ["netting", 2.4], ["rac", 1.8], ["break-handling", 2.2]],
+      "aliases": ["joint financing", "joint-financing", "order pooling", "maker checker", "maker-checker", "allocation engine", "split engine"]
+    },
+    {
+      "id": "simplifyinsights",
+      "title": "the SimplifyInsights analytics platform",
+      "answer": "On SimplifyInsights (Simplifyai) Keshav built a financial-analytics platform serving normalized statements, KPIs and ML forecasts for 945+ IDX-listed companies, behind a Kong gateway with Go BFF/auth/billing sidecars. He built an async ingestion pipeline (Playwright crawler → Celery → PostgreSQL) parsing XBRL Excel/PDF filings into a normalized schema (~96% filing-slot coverage), and shipped scikit-learn/XGBoost credit-scoring and forecasting services (MLflow) plus an SSE-streamed RAG chatbot behind a governed LLM orchestrator with prompt-injection guarding and output scanning.",
+      "keywords": [["simplifyinsights", 3.0], ["xbrl", 3.0], ["idx", 2.0], ["ingestion", 1.8], ["forecasts", 1.8], ["forecasting", 1.8], ["kpis", 1.8], ["credit-scoring", 2.2], ["945", 2.4], ["sidecar", 1.8], ["sidecars", 1.8]],
+      "aliases": ["simplify insights", "financial analytics", "credit scoring", "ingestion pipeline", "idx-listed", "listed companies"]
+    },
+    {
+      "id": "dailyjob",
+      "title": "DailyJob",
+      "answer": "DailyJob is a job-marketplace product Keshav is building with Next.js, React, Node.js/Express and MongoDB — job listings, candidate profiles, applications and hiring workflows. It's currently in development.",
+      "keywords": [["dailyjob", 3.0], ["daily-job", 3.0]],
+      "aliases": ["daily job", "job marketplace", "job portal", "job board"]
+    },
+    {
+      "id": "durgam",
+      "title": "Durgam Systems",
+      "answer": "Durgam Systems is a client project Keshav is currently building — a corporate-gifting and custom-branding storefront (PHP + Bootstrap) for a Gurugram supplier, covering branded gifts, notebooks, cables and IT accessories with MOQ-based ordering.",
+      "keywords": [["durgam", 3.0]],
+      "aliases": ["durgam systems", "corporate gift", "corporate gifting"]
+    },
+    {
+      "id": "ozbuilders",
+      "title": "Oz Builders Depot",
+      "answer": "Oz Builders Depot is a live client site built with Next.js for an Australian bathroom & kitchen fittings supplier with Sydney and Adelaide showrooms — collection browsing, product enquiries and a downloadable catalogue (ozbuildersdepot.com.au).",
+      "keywords": [["ozbuilders", 3.0], ["ozbuildersdepot", 3.0]],
+      "aliases": ["oz builders", "builders depot"]
+    },
+    {
+      "id": "spiceroute",
+      "title": "Spice Route Enterprises",
+      "answer": "Spice Route Enterprises is a live client site (Next.js) for an Indian spice, food & grocery exporter — product range, sourcing story and an export-enquiry flow (spicerouteenterprises.in).",
+      "keywords": [["spiceroute", 3.0]],
+      "aliases": ["spice route"]
+    },
+    {
+      "id": "apc",
+      "title": "APC Bheja",
+      "answer": "APC Bheja is a community hub Keshav built with Next.js — books, events, donations, volunteering and exam prep, with role-based onboarding and contribution tracking. It's live at apcbheja.in.",
+      "keywords": [["apc", 3.0], ["bheja", 3.0], ["ngo", 1.6]],
+      "aliases": ["apc bheja", "community hub", "community platform"]
+    },
+    {
+      "id": "trv",
+      "title": "TRV Technologies",
+      "answer": "Keshav built the corporate website for TRV Technologies LLP, a Delhi NCR IT-solutions provider (IT infrastructure, CCTV security, networking, AMC and web development). It's a Bootstrap/HTML/CSS/JS site with a service catalogue and enquiry flow (trvtech.in).",
+      "keywords": [["trv", 3.0]],
+      "aliases": ["trv technologies", "trvtech"]
+    },
+    {
+      "id": "freequademy",
+      "title": "Freequademy",
+      "answer": "Freequademy is Keshav's AI-powered learning platform (React, Vue, Node.js, MySQL, LangChain). It offers free learning resources, mentorship and community features, plus a RAG chatbot grounded in user-uploaded notes, PDFs and syllabus documents, and LLM-driven MCQ generation, concept explanation and summarisation.",
+      "keywords": [["freequademy", 3.0], ["freequadamy", 3.0]],
+      "aliases": ["learning platform", "education platform"]
+    },
+    {
+      "id": "frontend",
+      "title": "frontend",
+      "combinable": true,
+      "answer": "On the frontend Keshav builds with React (18/19) and TypeScript, plus Vue.js, using TanStack Query, Zustand, Tailwind CSS and Bootstrap — responsive, accessible, production-grade UIs including officer- and partner-facing portals and several client sites.",
+      "keywords": [["frontend", 2.4], ["front-end", 2.4], ["react", 2.0], ["reactjs", 2.0], ["vue", 2.0], ["vuejs", 2.0], ["tanstack", 2.4], ["zustand", 2.4], ["tailwind", 2.0], ["bootstrap", 1.4], ["next.js", 1.8], ["nextjs", 1.8], ["ui", 1.0], ["component", 1.2], ["typescript", 1.6], ["css", 1.2], ["tailwindcss", 2.2]],
+      "aliases": ["front end"]
+    },
+    {
+      "id": "backend",
+      "title": "backend / APIs",
+      "combinable": true,
+      "answer": "For backends Keshav uses FastAPI with Python and Pydantic v2 on PostgreSQL (asyncpg, SQLAlchemy, Alembic), with Celery/Redis for async job orchestration. He builds REST APIs, WebSocket services and SSE token streaming, has shipped ~35-service modules with large forward-only migration sets, and also works with Node.js/Express and PHP.",
+      "keywords": [["backend", 2.4], ["back-end", 2.4], ["fastapi", 2.6], ["api", 1.2], ["apis", 1.4], ["rest", 1.2], ["websocket", 1.8], ["sse", 1.6], ["pydantic", 2.4], ["celery", 2.2], ["microservice", 1.8], ["microservices", 1.8], ["express", 1.6], ["node.js", 1.4], ["nodejs", 1.4], ["php", 1.4]],
+      "aliases": ["back end", "server side"]
+    },
+    {
+      "id": "python",
+      "title": "Python",
+      "combinable": true,
+      "answer": "Python is core to Keshav's backend and Gen-AI work — FastAPI services, Celery pipelines, RAG and LLM orchestration, and data/ML with pandas, NumPy, scikit-learn and XGBoost.",
+      "keywords": [["python", 2.6], ["pythonic", 2.0]],
+      "aliases": []
+    },
+    {
+      "id": "data_ml",
+      "title": "data & ML",
+      "combinable": true,
+      "answer": "On the data/ML side Keshav works with pandas, NumPy, scikit-learn, XGBoost and MLflow. He's built credit-scoring and forecasting services for 945+ listed companies and async ingestion pipelines that parse XBRL Excel/PDF filings (Playwright crawler → Celery → PostgreSQL) with pdfplumber/openpyxl.",
+      "keywords": [["pandas", 2.6], ["numpy", 2.6], ["scikit", 2.6], ["scikit-learn", 2.8], ["scikitlearn", 2.6], ["sklearn", 2.6], ["xgboost", 2.8], ["mlflow", 2.6], ["forecasting", 2.0], ["forecast", 1.8], ["ingestion", 2.0], ["playwright", 2.2], ["pdfplumber", 2.4], ["openpyxl", 2.4], ["crawler", 1.6], ["xbrl", 2.2], ["ml", 1.4], ["data", 0.8]],
+      "aliases": ["machine learning", "credit scoring", "credit-scoring", "data pipeline", "data science", "data engineering"]
+    },
+    {
+      "id": "genai",
+      "title": "Gen-AI / LLMs",
+      "combinable": true,
+      "answer": "Gen-AI is Keshav's core focus. He builds RAG systems and LLM-orchestrated features with LangChain and LangGraph, the OpenAI API and LiteLLM, with ChromaDB and pgvector for vector search. He's shipped SSE-streamed RAG chatbots behind a governed LLM orchestrator with prompt-injection guarding and output scanning.",
+      "keywords": [["genai", 3.0], ["ai", 2.2], ["llm", 3.0], ["llms", 3.0], ["langchain", 3.0], ["langgraph", 3.0], ["rag", 3.0], ["openai", 2.4], ["litellm", 2.8], ["chromadb", 2.6], ["pgvector", 2.8], ["agentic", 2.2], ["agent", 1.6], ["agents", 1.6], ["chatbot", 1.6], ["embedding", 1.8], ["embeddings", 1.8], ["vector", 1.4]],
+      "aliases": ["gen-ai", "generative ai", "artificial intelligence", "multi agent", "multi-agent", "vector search", "vector database", "prompt injection", "llm orchestration"]
+    },
+    {
+      "id": "databases",
+      "title": "databases",
+      "combinable": true,
+      "answer": "Keshav's primary database is PostgreSQL (asyncpg, SQLAlchemy, Alembic) — including append-only sub-ledgers and 20+ forward-only migrations. He also uses Redis, MySQL and MongoDB.",
+      "keywords": [["database", 2.2], ["databases", 2.2], ["postgres", 2.6], ["postgresql", 2.6], ["mysql", 2.2], ["mongodb", 2.4], ["mongo", 2.0], ["redis", 2.2], ["sqlalchemy", 2.4], ["alembic", 2.4], ["asyncpg", 2.4], ["sql", 1.2], ["ledger", 1.6], ["migrations", 1.4], ["orm", 1.4]],
+      "aliases": []
+    },
+    {
+      "id": "infra",
+      "title": "infra & platform",
+      "combinable": true,
+      "answer": "For infra Keshav works with Docker, the Kong API Gateway, Cerbos for RBAC, Zitadel OAuth2, NATS, MinIO/S3, and observability via OpenTelemetry, Prometheus and Grafana.",
+      "keywords": [["docker", 2.2], ["kong", 2.4], ["cerbos", 2.6], ["zitadel", 2.6], ["nats", 2.2], ["minio", 2.4], ["opentelemetry", 2.6], ["otel", 2.2], ["prometheus", 2.4], ["grafana", 2.4], ["observability", 2.2], ["devops", 2.0], ["infra", 2.0], ["infrastructure", 2.0], ["kubernetes", 2.0], ["k8s", 2.0], ["rbac", 1.8], ["oauth", 1.6], ["deployment", 1.4], ["gateway", 1.4]],
+      "aliases": []
+    },
+    {
+      "id": "blockchain",
+      "title": "blockchain / Web3",
+      "answer": "Keshav's blockchain exposure is mainly through certifications — 'Blockchain Technology using Ethereum & Polygon' (Metacrafters × Chandigarh University, 2024) and 'Introduction to Blockchain and Ethereum' (Infosys Springboard, 2024). His current work is focused on backend and Gen-AI engineering.",
+      "keywords": [["blockchain", 2.6], ["web3", 2.6], ["solidity", 2.6], ["ethereum", 2.4], ["polygon", 2.0], ["nft", 2.0], ["crypto", 1.8], ["smart-contract", 2.4]],
+      "aliases": ["smart contract", "on chain", "on-chain"]
+    },
+    {
+      "id": "git",
+      "title": "version control",
+      "answer": "Keshav uses Git for version control; his GitHub is {github}",
+      "keywords": [["git", 2.0], ["github", 2.2]],
+      "aliases": ["version control", "source control"]
+    },
+    {
+      "id": "education",
+      "title": "his education",
+      "answer": "Keshav is pursuing a B.E. in Computer Science at Chandigarh University, India (2022–2026), complemented by certifications from NPTEL, SWAYAM/NITTTR, Metacrafters and Infosys Springboard.",
+      "keywords": [["education", 2.4], ["degree", 2.2], ["college", 2.0], ["university", 2.0], ["study", 1.8], ["studies", 1.8], ["student", 1.4], ["graduation", 1.6], ["b.e.", 1.6], ["cgpa", 1.6]],
+      "aliases": ["chandigarh university", "where did you study"]
+    },
+    {
+      "id": "certifications",
+      "title": "his certifications",
+      "answer": "Keshav's certifications: Multi-Core Computer Architecture (NPTEL, IIT Guwahati — Elite, 2023); Internet of Things: Design Concepts & Use Cases (SWAYAM, NITTTR Chandigarh, 2024); Blockchain Technology using Ethereum & Polygon (Metacrafters × Chandigarh University, 2024); and Introduction to Blockchain and Ethereum (Infosys Springboard, 2024).",
+      "keywords": [["certification", 2.6], ["certifications", 2.6], ["certificate", 2.4], ["certificates", 2.4], ["nptel", 2.4], ["swayam", 2.4], ["metacrafters", 2.4], ["courses", 1.4], ["course", 1.2]],
+      "aliases": []
+    },
+    {
+      "id": "contact",
+      "title": "how to reach him",
+      "answer": "You can reach Keshav through the contact form on this site — he's open to new opportunities and collaborations. LinkedIn: {linkedin}, GitHub: {github}",
+      "keywords": [["contact", 2.4], ["hire", 2.4], ["reach", 2.0], ["collaborate", 2.0], ["collaboration", 2.0], ["freelance", 2.0], ["available", 1.6], ["opportunity", 1.6]],
+      "aliases": ["work with", "get in touch", "how do i contact"]
+    },
+    {
+      "id": "email",
+      "title": "his email",
+      "answer": "You can reach Keshav at {email} or through the contact form on this website. He'll get back to you as soon as possible!",
+      "keywords": [["email", 2.6], ["mail", 2.0], ["e-mail", 2.6]],
+      "aliases": []
+    },
+    {
+      "id": "socials",
+      "title": "his social links",
+      "answer": "Connect with Keshav on LinkedIn: {linkedin}. You can also find him on GitHub: {github} and Instagram: {instagram}",
+      "keywords": [["linkedin", 2.6], ["instagram", 2.4], ["twitter", 2.0], ["socials", 2.2]],
+      "aliases": ["social media", "social links"]
+    },
+    {
+      "id": "skills_overview",
+      "title": "his overall stack",
+      "answer": "Keshav's stack: Languages — Python, TypeScript, JavaScript, Go, SQL. Backend — FastAPI, Pydantic v2, Celery, Node.js/Express, PHP. Frontend — React (18/19), Vue.js, TanStack, Zustand, Tailwind CSS. Gen-AI/LLM — LangChain, LangGraph, RAG, OpenAI API, LiteLLM, ChromaDB, pgvector. Data/ML — pandas, NumPy, scikit-learn, XGBoost, MLflow, Playwright. Databases — PostgreSQL, Redis, MySQL, MongoDB. Infra — Docker, Kong, Cerbos, Zitadel, NATS, MinIO/S3, OpenTelemetry, Prometheus, Grafana.",
+      "keywords": [["skill", 2.2], ["skills", 2.4], ["skillset", 2.6], ["stack", 2.2], ["tech", 1.4], ["technologies", 1.8], ["technology", 1.6], ["expertise", 2.0], ["languages", 1.6], ["proficient", 1.8], ["good at", 1.8], ["golang", 2.0]],
+      "aliases": ["tech stack", "full stack", "what technologies", "go lang", "what tech does he use", "what can you do technically"]
+    },
+    {
+      "id": "projects_overview",
+      "title": "his projects",
+      "answer": "At work Keshav builds Simplifyai's SimplifyJF (co-lending) and SimplifyInsights (financial analytics) platforms. Outside that: DailyJob (job marketplace), Freequademy (AI learning platform), Durgam Systems, Oz Builders Depot, Spice Route Enterprises, TRV Technologies and APC Bheja. See the Projects section above!",
+      "keywords": [["project", 1.8], ["projects", 2.2], ["portfolio", 2.0], ["built", 1.4], ["build", 1.0], ["side project", 2.0], ["client work", 2.0]],
+      "aliases": ["what have you built", "what has he built", "your projects", "list of projects", "show me projects", "what have you worked"]
+    },
+    {
+      "id": "location",
+      "title": "where he's based",
+      "answer": "Keshav is based in India and studies at Chandigarh University. He's open to remote opportunities and collaborations worldwide.",
+      "keywords": [["location", 2.2], ["based", 2.0], ["city", 1.8], ["country", 1.8], ["relocate", 2.0], ["remote", 1.6], ["timezone", 1.8], ["india", 1.4]],
+      "aliases": ["where are you", "where is he", "where do you live"]
+    },
+    {
+      "id": "hobbies",
+      "title": "his interests",
+      "answer": "Besides shipping code, Keshav explores new Gen-AI and LLM tooling, follows applied-ML and backend systems work, contributes to open source, and keeps up with fintech and infra trends.",
+      "keywords": [["hobby", 2.2], ["hobbies", 2.2], ["interest", 1.8], ["interests", 2.0], ["passion", 1.8], ["pastime", 2.0]],
+      "aliases": ["free time", "spare time", "outside work", "for fun"]
+    }
+  ]
+}

@@ -1,213 +1,275 @@
 """Rule-based chatbot for Keshav's portfolio.
 
-Ported from the previous Express implementation. Ordering matters: more
-specific / substring-prone branches are checked first (e.g. "blockchain"
-contains the substring "ai", so Web3 is matched before the AI branch).
+All of the *content* (bio, experience, project blurbs, skills, links, small-talk
+replies) lives in ``knowledge.json`` — this module is only the matching engine.
+To change what the bot says, edit the JSON; no code change needed.
+
+How matching works: the user's message is scored against every topic in the
+knowledge base using
+
+* phrase containment on a normalised string (multi-word cues),
+* token containment for single words,
+* fuzzy token matching (``difflib``) so typos still land ("langchian",
+  "freequadamy", "postgre").
+
+The best-scoring topic wins. Several strongly-matching *combinable* topics (the
+skill areas) get merged into one reply. A weak best score returns a
+"did you mean …" prompt instead of a blind guess.
+
+Public API is unchanged: ``generate_chat_response(str) -> str``.
 """
 from __future__ import annotations
 
+import json
+import re
+from dataclasses import dataclass
+from difflib import SequenceMatcher
+from pathlib import Path
+
+KNOWLEDGE_FILE = Path(__file__).with_name("knowledge.json")
+
+
+@dataclass(frozen=True)
+class Topic:
+    id: str
+    title: str
+    answer: str
+    keywords: tuple[tuple[str, float], ...] = ()
+    aliases: tuple[str, ...] = ()
+    combinable: bool = False
+
+
+@dataclass(frozen=True)
+class SmallTalkRule:
+    answer: str
+    equals: frozenset[str] = frozenset()
+    tokens: frozenset[str] = frozenset()
+    starts: tuple[str, ...] = ()
+    contains: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class KnowledgeBase:
+    topics: tuple[Topic, ...]
+    smalltalk: tuple[SmallTalkRule, ...]
+    fallback: str
+    weak_match: str
+    merge_joiner: str
+
+
+def _load_knowledge(path: Path = KNOWLEDGE_FILE) -> KnowledgeBase:
+    try:
+        raw = json.loads(path.read_text("utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:  # pragma: no cover
+        raise RuntimeError(f"Cannot load knowledge base at {path}: {exc}") from exc
+
+    links: dict[str, str] = raw.get("links", {})
+
+    def fill(text: str) -> str:
+        for key, value in links.items():
+            text = text.replace("{" + key + "}", value)
+        return text
+
+    topics = tuple(
+        Topic(
+            id=t["id"],
+            title=t["title"],
+            answer=fill(t["answer"]),
+            keywords=tuple((k[0], float(k[1])) for k in t.get("keywords", [])),
+            aliases=tuple(t.get("aliases", [])),
+            combinable=bool(t.get("combinable", False)),
+        )
+        for t in raw.get("topics", [])
+    )
+
+    smalltalk = tuple(
+        SmallTalkRule(
+            answer=fill(r["answer"]),
+            equals=frozenset(r.get("equals", [])),
+            tokens=frozenset(r.get("tokens", [])),
+            starts=tuple(r.get("starts", [])),
+            contains=tuple(r.get("contains", [])),
+        )
+        for r in raw.get("smalltalk", [])
+    )
+
+    resp = raw.get("responses", {})
+    return KnowledgeBase(
+        topics=topics,
+        smalltalk=smalltalk,
+        fallback=fill(resp.get("fallback", "Sorry, I don't have an answer for that.")),
+        weak_match=fill(
+            resp.get(
+                "weak_match",
+                "I'm not sure — did you mean {options}?",
+            )
+        ),
+        merge_joiner=resp.get("merge_joiner", " "),
+    )
+
+
+_KB = _load_knowledge()
+
+
+# --------------------------------------------------------------------------
+# Matching engine
+# --------------------------------------------------------------------------
+_NORM_RE = re.compile(r"[^a-z0-9.+#/\- ]+")
+_TOKEN_RE = re.compile(r"[a-z0-9.+#]+")
+
+# short filler tokens that should never drive fuzzy matches
+_STOP = frozenset(
+    "a an the is are was were be been being do does did i you he she it we they "
+    "me him her us them my your his our their to of in on at for with about and "
+    "or but so as by from this that these those what which who whom whose how "
+    "why when where can could would should will shall may might must have has "
+    "had tell me more please give know want".split()
+)
+
+
+def _normalize(text: str) -> str:
+    t = (text or "").lower().replace("'", "").replace("’", "")
+    t = _NORM_RE.sub(" ", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def _fuzzy(token: str, target: str) -> float:
+    """Similarity in [0, 1] for near-miss / typo tokens, else 0."""
+    if len(token) < 4 or len(target) < 4:
+        return 0.0
+    if abs(len(token) - len(target)) > 3:
+        return 0.0
+    ratio = SequenceMatcher(None, token, target).ratio()
+    return ratio if ratio >= 0.84 else 0.0
+
+
+def _score(topic: Topic, norm: str, tokens: list[str], tokenset: set[str]) -> float:
+    score = 0.0
+    for alias in topic.aliases:
+        if alias in norm:
+            score += 4.5
+
+    # Pass 1 — exact phrase / token hits.
+    exact: set[str] = set()
+    fuzzy_terms: list[tuple[str, float]] = []
+    for phrase, weight in topic.keywords:
+        if " " in phrase or "-" in phrase or "/" in phrase:
+            if phrase in norm:
+                score += weight
+            continue
+        if phrase in tokenset:
+            score += weight
+            exact.add(phrase)
+        else:
+            fuzzy_terms.append((phrase, weight))
+
+    # Pass 2 — typo-tolerant hits, ignoring tokens already credited exactly
+    # (stops "project" also fuzzy-matching the "projects" keyword, etc.).
+    for phrase, weight in fuzzy_terms:
+        best = 0.0
+        for tok in tokens:
+            if tok in _STOP or tok in exact:
+                continue
+            best = max(best, _fuzzy(tok, phrase))
+            if best == 1.0:
+                break
+        if best:
+            score += weight * 0.85 * best
+    return score
+
+
+def _oxford(items: list[str]) -> str:
+    if len(items) == 1:
+        return items[0]
+    if len(items) == 2:
+        return f"{items[0]} or {items[1]}"
+    return ", ".join(items[:-1]) + f", or {items[-1]}"
+
+
+def _tok_align(a: str, b: str) -> bool:
+    """`a` (a word from the user) lines up with `b` (a word from a phrase):
+    identical, a truncation of it ("y" → "you"), or a small typo ("wat" → "what")."""
+    if a == b:
+        return True
+    if a and b.startswith(a) and len(b) - len(a) <= 3:
+        return True
+    return len(a) >= 3 and len(b) >= 3 and SequenceMatcher(None, a, b).ratio() >= 0.8
+
+
+def _near_phrase(phrase: str, norm: str) -> bool:
+    """True if `norm` is basically `phrase` with a typo or a dropped/partial
+    word — "how are y" ≈ "how are you". The first *and* last words must line
+    up, so "what do you do" is not read as "what do you know" / "what can you
+    do", and "where do you work" is not read as "how do you work"."""
+    if phrase in norm:
+        return True
+    if len(phrase) < 5 or abs(len(norm) - len(phrase)) > 5:
+        return False
+    pt, nt = phrase.split(), norm.split()
+    if not pt or not nt:
+        return False
+    if not _tok_align(nt[0], pt[0]) or not _tok_align(nt[-1], pt[-1]):
+        return False
+    return SequenceMatcher(None, phrase, norm).ratio() >= 0.84
+
+
+def _near_token(word: str, tokens: list[str]) -> bool:
+    """Exact for tiny words ("hi", "yo"), fuzzy for longer ("helo"→"hello")."""
+    if len(word) < 4:
+        return word in tokens
+    return any(
+        t == word or (len(t) >= 3 and SequenceMatcher(None, word, t).ratio() >= 0.8)
+        for t in tokens
+    )
+
+
+def _smalltalk(norm: str, tokens: list[str], tokenset: set[str]) -> str | None:
+    for rule in _KB.smalltalk:
+        if (
+            (rule.equals and (norm in rule.equals
+                              or any(_near_phrase(e, norm) for e in rule.equals)))
+            or (rule.tokens and (tokenset & rule.tokens
+                                 or any(_near_token(w, tokens) for w in rule.tokens)))
+            or (rule.starts and norm.startswith(rule.starts))
+            or any(_near_phrase(sub, norm) for sub in rule.contains)
+        ):
+            return rule.answer
+    return None
+
 
 def generate_chat_response(user_message: str) -> str:
-    msg = (user_message or "").lower().strip()
+    norm = _normalize(user_message)
+    if not norm:
+        return _KB.fallback
 
-    def has(*words: str) -> bool:
-        return any(w in msg for w in words)
+    tokens = _TOKEN_RE.findall(norm)
+    tokenset = set(tokens)
 
-    # Greeting
-    if has("hello", "hi", "hey", "greetings"):
-        return (
-            "Hello! I'm Keshav's AI assistant. I can tell you about his "
-            "background, skills, projects, and more. What would you like to know?"
-        )
+    small = _smalltalk(norm, tokens, tokenset)
+    if small:
+        return small
 
-    # About Keshav
-    if has("who are you", "about keshav", "tell me about yourself", "who is keshav"):
-        return (
-            "I'm Keshav Singh — an AI engineer and full-stack Web3 developer. I "
-            "build modern apps with Next.js and FastAPI, ship RAG systems and AI "
-            "agents across the LLM ecosystem, and craft on-chain experiences with "
-            "Solidity and Web3. I love bringing ideas to life through technology!"
-        )
-
-    # Specific projects (checked first for precise matching)
-    if has("apc", "ngo", "community"):
-        return (
-            "APC is a community-driven NGO engagement platform Keshav built with "
-            "Next.js, React, FastAPI, WebSockets, and Tailwind CSS. It manages "
-            "members, volunteers, books, and initiatives, with role-based "
-            "onboarding, contribution tracking, and real-time engagement dashboards."
-        )
-
-    if has("trv", "trv technologies"):
-        return (
-            "Keshav developed the official website for TRV Technologies LLP, "
-            "showcasing their services, portfolio, and contact information. The "
-            "site features a professional design with smooth animations and a "
-            "responsive layout."
-        )
-
-    if has("freequademy", "learning platform"):
-        return (
-            "Freequademy is Keshav's AI-powered learning platform built with "
-            "Next.js, FastAPI, LangChain, LlamaIndex, and RAG. It offers free "
-            "learning resources, mentorship, and community features, plus a "
-            "RAG-based AI chatbot that answers queries from uploaded notes, PDFs, "
-            "and syllabus documents, along with MCQ generation and LLM-powered "
-            "content summarisation."
-        )
-
-    # Frontend
-    if has("next", "frontend", "shadcn", "framer", "tailwind", "typescript"):
-        return (
-            "On the frontend, Keshav builds with Next.js, React, and TypeScript, "
-            "styled with Tailwind CSS and shadcn/ui, and brings interfaces to life "
-            "with Framer Motion animations. He focuses on fast, accessible, "
-            "production-grade UIs."
-        )
-
-    if has("react", "component"):
-        return (
-            "Keshav builds component-driven UIs with React and Next.js in "
-            "TypeScript, using shadcn/ui for polished components and Framer Motion "
-            "for animation. He ships responsive, server-rendered apps with great UX."
-        )
-
-    # Backend
-    if has("fastapi", "backend", "websocket", "streaming", "sse", "rest"):
-        return (
-            "For backends, Keshav uses FastAPI with Python to build fast REST APIs, "
-            "real-time WebSocket services, and SSE token streaming for AI "
-            "responses. He focuses on clean, scalable, well-typed server code."
-        )
-
-    if has("python"):
-        return (
-            "Python is core to Keshav's backend and AI work. He builds "
-            "high-performance APIs with FastAPI and uses Python across his RAG "
-            "pipelines, AI agents, and LLM integrations."
-        )
-
-    # Blockchain / Web3 (before AI: "blockchain" contains the substring "ai")
-    if has(
-        "blockchain", "web3", "solidity", "smart contract", "nft", "defi",
-        "dao", "ethereum", "metamask", "hardhat", "erc20",
-    ):
-        return (
-            "On the Web3 side, Keshav writes smart contracts in Solidity "
-            "(developed and tested with Hardhat), integrates them into apps with "
-            "Ethers.js and MetaMask, and works with NFTs, ERC20 tokens, DeFi, and "
-            "DAO patterns."
-        )
-
-    # AI Stack
-    if has(
-        "ai", "genai", "llm", "langchain", "llama", "ollama", "gemini",
-        "openai", "agent", "mcp", "vllm", "rag",
-    ):
-        return (
-            "AI is Keshav's core focus. He builds RAG systems, AI agents, and "
-            "multi-agent workflows using LangChain and LlamaIndex, runs models via "
-            "Ollama, vLLM, the OpenAI API, and Google Gemini, and connects tools "
-            "through the Model Context Protocol (MCP)."
-        )
-
-    # Crypto APIs
-    if has(
-        "crypto", "coingecko", "coinmarketcap", "binance", "tradingview",
-        "market data", "trading",
-    ):
-        return (
-            "For live crypto market data, Keshav integrates the CoinGecko, "
-            "CoinMarketCap, and Binance APIs, and embeds TradingView widgets for "
-            "real-time charts inside his Web3 dashboards."
-        )
-
-    if has("database", "mysql", "mongodb"):
-        return (
-            "Keshav works with various databases including MySQL for relational "
-            "data and MongoDB for NoSQL solutions. He designs efficient database "
-            "schemas and optimizes queries for better performance."
-        )
-
-    if has("git", "github", "version control"):
-        return (
-            "Keshav uses Git for version control and maintains his projects on "
-            "GitHub: https://github.com/keshav3815"
-        )
-
-    if has("experience", "background", "work experience"):
-        return (
-            "Keshav has hands-on experience across full-stack web development, "
-            "applied Generative AI, and Web3. He's built an AI-powered learning "
-            "platform, a community NGO platform, and a corporate website, and "
-            "enjoys taking on challenging, real-world projects."
-        )
-
-    if has("education", "degree", "study", "college"):
-        return (
-            "Keshav is pursuing a Bachelor of Engineering in Computer Science at "
-            "Chandigarh University, India (2022–2026). He continuously expands his "
-            "knowledge through certifications (NPTEL, SWAYAM, Infosys Springboard) "
-            "and hands-on projects, and believes in lifelong learning."
-        )
-
-    if has("contact", "hire", "work with", "reach"):
-        return (
-            "You can contact Keshav through the contact form on this site. He's "
-            "always open to new opportunities and collaborations! LinkedIn: "
-            "https://www.linkedin.com/in/keshav-singh3815/, GitHub: "
-            "https://github.com/keshav3815"
-        )
-
-    if has("email", "mail"):
-        return (
-            "You can reach Keshav at keshavsingh3815@gmail.com or through the "
-            "contact form on this website. He'll get back to you as soon as possible!"
-        )
-
-    if has("linkedin", "social media"):
-        return (
-            "Connect with Keshav on LinkedIn: "
-            "https://www.linkedin.com/in/keshav-singh3815/. You can also find him "
-            "on Instagram: https://www.instagram.com/thisiskeshavsingh/ and GitHub: "
-            "https://github.com/keshav3815"
-        )
-
-    # General skills
-    if has("skill", "technology", "programming", "expertise", "stack", "tech"):
-        return (
-            "Keshav's stack spans four areas: Frontend (Next.js, React, "
-            "TypeScript, Tailwind CSS, Framer Motion, shadcn/ui), Backend "
-            "(FastAPI, Python, REST APIs, WebSockets, SSE streaming), AI "
-            "(LangChain, LlamaIndex, Ollama, OpenAI, Google Gemini, vLLM, MCP, AI "
-            "agents, RAG, multi-agent systems), and Web3 (Solidity, Hardhat, "
-            "Ethers.js, MetaMask, smart contracts, NFTs, DeFi, DAOs) — plus live "
-            "crypto data via CoinGecko, CoinMarketCap, Binance, and TradingView."
-        )
-
-    # Projects general
-    if has("project", "work", "portfolio"):
-        return (
-            "Keshav has worked on several projects including Freequademy (an "
-            "AI-powered learning platform with a RAG chatbot), the TRV "
-            "Technologies LLP corporate website, and APC (a community & NGO "
-            "engagement platform). Check out the Projects section above!"
-        )
-
-    if has("location", "where", "live", "based"):
-        return (
-            "Keshav is based in India and studies at Chandigarh University. He's "
-            "open to remote work opportunities and collaborations worldwide."
-        )
-
-    if has("hobby", "interest", "free time", "passion"):
-        return (
-            "Besides coding, Keshav enjoys exploring new AI/ML applications, "
-            "contributing to open source, and diving into Web3 and blockchain. He "
-            "also likes reading tech blogs and staying updated with industry trends."
-        )
-
-    return (
-        "I'm not sure about that specific question, but I'd be happy to tell you "
-        "about Keshav's skills, projects, or background. What would you like to know?"
+    ranked = sorted(
+        ((_score(t, norm, tokens, tokenset), t) for t in _KB.topics),
+        key=lambda pair: pair[0],
+        reverse=True,
     )
+    top_score, top = ranked[0]
+
+    # Nothing meaningful matched.
+    if top_score < 1.5:
+        near = [t.title for s, t in ranked if s >= 0.7][:3]
+        if near:
+            return _KB.weak_match.format(options=_oxford(near))
+        return _KB.fallback
+
+    # Merge several strong skill-area hits into one reply.
+    if top.combinable:
+        picks = [
+            t for s, t in ranked
+            if t.combinable and s >= max(1.8, top_score * 0.6)
+        ][:3]
+        if len(picks) > 1:
+            return _KB.merge_joiner.join(p.answer for p in picks)
+
+    return top.answer

@@ -19,16 +19,16 @@ export function About() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
         <Reveal>
           <a
-            href="/Resume.png"
+            href="/Resume-2026.pdf"
             target="_blank"
             rel="noreferrer"
             className="group relative block overflow-hidden rounded-xl border shadow-lg"
           >
             <Image
-              src="/Resume.png"
+              src="/Resume-2026.png"
               alt="Keshav Singh — Resume"
               width={900}
-              height={1200}
+              height={1273}
               className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
             />
           </a>
@@ -40,20 +40,20 @@ export function About() {
               About Me
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              Building across web, AI &amp; Web3
+              Backend, GenAI &amp; full-stack web
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              I&apos;m Keshav Singh, a Computer Science engineering student
-              building at the intersection of full-stack web development, applied
-              Generative AI, and Web3.
+              I&apos;m Keshav Singh, a Computer Science engineering student and
+              backend/Gen-AI engineer with production experience across fintech
+              co-lending orchestration and ML-driven financial analytics.
             </p>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              On the product side I ship modern apps with Next.js, React,
-              TypeScript and FastAPI. On the AI side I build RAG pipelines, AI
-              agents and multi-agent systems with LangChain, LlamaIndex, Ollama
-              and models from OpenAI and Google Gemini. I&apos;m also deep into
-              Web3 — writing smart contracts in Solidity and wiring up live crypto
-              market data.
+              On the backend I build FastAPI/PostgreSQL services with async data
+              pipelines, Celery/Redis job orchestration, and append-only ledgers.
+              On the AI side I ship RAG systems and LLM-orchestrated features with
+              LangChain, LangGraph, the OpenAI API and pgvector, plus
+              scikit-learn/XGBoost credit-scoring and forecasting &mdash; with
+              React/TypeScript frontends end to end.
             </p>
           </Reveal>
 

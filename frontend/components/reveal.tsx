@@ -19,6 +19,7 @@ export function Reveal({
 }) {
   return (
     <motion.div
+      data-reveal
       className={className}
       variants={variants}
       initial="hidden"

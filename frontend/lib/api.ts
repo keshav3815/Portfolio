@@ -1,6 +1,13 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8001";
 
+/**
+ * Web3Forms access key (https://web3forms.com). When set, contact-form
+ * submissions are emailed via Web3Forms instead of hitting the FastAPI
+ * backend — needed on serverless hosts where the backend can't persist them.
+ */
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+
 export type ContactPayload = {
   name: string;
   email: string;
@@ -9,6 +16,26 @@ export type ContactPayload = {
 };
 
 export async function sendContact(payload: ContactPayload): Promise<void> {
+  if (WEB3FORMS_KEY) {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        from_name: "Portfolio Contact Form",
+        ...payload,
+      }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { success?: boolean };
+    if (!res.ok || !data.success) {
+      throw new Error(`Web3Forms request failed with ${res.status}`);
+    }
+    return;
+  }
+
   const res = await fetch(`${API_URL}/contact`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

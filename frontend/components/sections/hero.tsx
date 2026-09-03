@@ -5,14 +5,14 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  Atom,
   Bot,
-  Boxes,
   Code2,
   Database,
   Layers,
   Send,
   Sparkles,
-  Triangle,
+  Workflow,
   Zap,
 } from "lucide-react";
 
@@ -23,37 +23,37 @@ import { social } from "@/lib/data";
 
 const valueProps = [
   {
-    title: "Scalable Web Apps",
-    description: "Fast, production-grade Next.js & FastAPI architectures.",
-    metric: "< 50ms TTFB",
+    title: "Scalable Backends",
+    description: "Production FastAPI services on PostgreSQL with async pipelines.",
+    metric: "async · typed",
     icon: Zap,
   },
   {
-    title: "AI-Powered Solutions",
-    description: "RAG pipelines, multi-agent systems & LLM integrations.",
+    title: "GenAI Systems",
+    description: "RAG pipelines, multi-agent workflows & governed LLM orchestration.",
     metric: "RAG · Agents",
     icon: Bot,
   },
   {
-    title: "On-Chain Experiences",
-    description: "Solidity smart contracts and Web3 dApps with Ethers.js.",
-    metric: "EVM · DeFi",
-    icon: Boxes,
+    title: "Fintech Orchestration",
+    description: "Co-lending, sub-ledgers, settlement & reconciliation with async jobs.",
+    metric: "Celery · Redis",
+    icon: Workflow,
   },
   {
-    title: "Data-Driven Products",
-    description: "Vector search, real-time pipelines & streaming APIs.",
-    metric: "SSE · Vector DB",
+    title: "Data & ML Products",
+    description: "Credit-scoring, forecasting, vector search & SSE-streamed APIs.",
+    metric: "SSE · pgvector",
     icon: Database,
   },
 ];
 
 const heroTechStack = [
-  { name: "Next.js", icon: Triangle },
+  { name: "Python", icon: Code2 },
   { name: "FastAPI", icon: Zap },
+  { name: "PostgreSQL", icon: Database },
   { name: "LangChain", icon: Layers },
-  { name: "OpenAI / Gemini", icon: Sparkles },
-  { name: "Solidity", icon: Code2 },
+  { name: "React", icon: Atom },
 ];
 
 export function Hero() {
@@ -101,15 +101,16 @@ export function Hero() {
             Hi, I&apos;m <span className="text-primary">Keshav Singh</span>
           </h1>
           <h2 className="mt-3 text-xl font-semibold text-muted-foreground sm:text-2xl">
-            AI Engineer &amp;{" "}
+            Gen-AI Engineer &amp;{" "}
             <span className="bg-linear-to-r from-primary to-accent-foreground bg-clip-text text-transparent">
-              Full-Stack Web3 Developer
+              Full-Stack Web Developer
             </span>
           </h2>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            I build production-grade web apps with Next.js &amp; FastAPI, ship AI
-            agents and RAG systems across the LLM ecosystem, and craft on-chain
-            experiences with Solidity &amp; Web3.
+            I build production FastAPI/PostgreSQL backends, async data pipelines,
+            and RAG &amp; LLM-orchestrated features &mdash; across fintech
+            co-lending orchestration and ML-driven financial analytics, with
+            React/TypeScript frontends end to end.
           </p>
 
           {/* value prop grid */}
@@ -209,7 +210,7 @@ export function Hero() {
                   <span className="size-2.5 rounded-full bg-amber-500/80" />
                   <span className="size-2.5 rounded-full bg-emerald-500/80" />
                   <span className="ml-2 font-mono text-[11px] text-muted-foreground">
-                    keshav-ai-stack.tsx
+                    keshav-ai-stack.py
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary">
@@ -249,9 +250,9 @@ export function Hero() {
               {/* pipeline bar */}
               <div className="flex flex-wrap items-center gap-2 border-t bg-background/60 px-4 py-3 font-mono text-[11px]">
                 <Layers className="size-3.5 text-primary" />
-                <span className="text-foreground">Next.js</span>
-                <ArrowRight className="size-3 text-muted-foreground" />
                 <span className="text-foreground">FastAPI</span>
+                <ArrowRight className="size-3 text-muted-foreground" />
+                <span className="text-foreground">PostgreSQL</span>
                 <ArrowRight className="size-3 text-muted-foreground" />
                 <span className="text-primary">LangChain Agents</span>
               </div>

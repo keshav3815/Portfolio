@@ -35,6 +35,13 @@ python3 -m venv .venv
 ./.venv/bin/uvicorn main:app --reload --port 8001
 ```
 
+Optional env (see `backend/.env.example`):
+
+- `ALLOWED_ORIGINS` — comma-separated extra CORS origins for the deployed
+  frontend. `localhost`/`127.0.0.1` are always allowed.
+- `ADMIN_TOKEN` — bearer token required by `GET /messages`; if unset that
+  endpoint returns `503`.
+
 ### Frontend (port 3000)
 
 ```bash

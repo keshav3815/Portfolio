@@ -18,7 +18,7 @@ export function Projects() {
         <SectionHeading
           eyebrow="My Work"
           title="Featured Projects"
-          subtitle="A few recent builds across AI, full-stack, and Web3."
+          subtitle="A few recent builds across GenAI and full-stack web."
         />
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -11,15 +10,17 @@ import {
   Database,
   Layers,
   Send,
-  Sparkles,
   Workflow,
   Zap,
 } from "lucide-react";
 
 import { GithubIcon, LinkedinIcon } from "@/components/icons/social";
-import { ParticleNetwork } from "@/components/particle-network";
 import { Button } from "@/components/ui/button";
 import { social } from "@/lib/data";
+
+const NeuralCore = dynamic(() => import("@/components/neural-core"), {
+  ssr: false,
+});
 
 const valueProps = [
   {
@@ -57,32 +58,19 @@ const heroTechStack = [
 ];
 
 export function Hero() {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = panelRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    setTilt({
-      x: Math.max(-8, Math.min(8, -(y / rect.height) * 12)),
-      y: Math.max(-8, Math.min(8, (x / rect.width) * 12)),
-    });
-  };
-
-  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
-
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden pt-16"
+      className="relative isolate flex min-h-screen items-center overflow-hidden bg-linear-to-b from-background via-background to-primary/10 pt-16"
     >
-      {/* aurora + particle network background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="animate-aurora absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-primary/25 blur-3xl" />
+        <div className="animate-aurora absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
         <div className="animate-aurora absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-accent/40 blur-3xl [animation-delay:-7s]" />
-        <ParticleNetwork />
+        <div className="absolute inset-0">
+          <NeuralCore />
+        </div>
+        <div className="absolute inset-0 bg-background/75 lg:bg-transparent lg:bg-linear-to-r lg:from-background lg:via-background/60 lg:via-40% lg:to-transparent lg:to-70%" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-background to-transparent" />
       </div>
 
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 py-12 sm:px-6 lg:grid-cols-12 lg:gap-10">
@@ -183,82 +171,6 @@ export function Hero() {
           </div>
         </motion.div>
 
-        {/* right column: 3D tilt glass panel */}
-        <motion.div
-          className="lg:col-span-6"
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-        >
-          <div
-            ref={panelRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="mx-auto max-w-lg"
-            style={{ perspective: "1000px" }}
-          >
-            <div
-              className="relative overflow-hidden rounded-2xl border bg-card/80 shadow-2xl backdrop-blur-xl transition-transform duration-200 ease-out"
-              style={{
-                transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              }}
-            >
-              {/* header bar */}
-              <div className="flex items-center justify-between border-b bg-background/60 px-4 py-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="size-2.5 rounded-full bg-rose-500/80" />
-                  <span className="size-2.5 rounded-full bg-amber-500/80" />
-                  <span className="size-2.5 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 font-mono text-[11px] text-muted-foreground">
-                    keshav-ai-stack.py
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary">
-                  <Sparkles className="size-3.5 animate-pulse" />
-                  Live
-                </div>
-              </div>
-
-              {/* visual */}
-              <div className="relative aspect-16/10 w-full overflow-hidden">
-                <Image
-                  src="/hero-3d.jpg"
-                  alt="3D visualization of an AI engineering workstation"
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 90vw, 32rem"
-                  className="scale-105 object-cover transition-transform duration-700 hover:scale-100"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-background/20" />
-
-                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-background/90 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-lg">
-                  <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                    <span className="relative inline-flex size-2 rounded-full bg-primary" />
-                  </span>
-                  LLM Reasoning
-                </span>
-                <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-background/90 px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-lg">
-                  <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 [animation-delay:-1s]" />
-                    <span className="relative inline-flex size-2 rounded-full bg-primary" />
-                  </span>
-                  AI Agents
-                </span>
-              </div>
-
-              {/* pipeline bar */}
-              <div className="flex flex-wrap items-center gap-2 border-t bg-background/60 px-4 py-3 font-mono text-[11px]">
-                <Layers className="size-3.5 text-primary" />
-                <span className="text-foreground">FastAPI</span>
-                <ArrowRight className="size-3 text-muted-foreground" />
-                <span className="text-foreground">PostgreSQL</span>
-                <ArrowRight className="size-3 text-muted-foreground" />
-                <span className="text-primary">LangChain Agents</span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

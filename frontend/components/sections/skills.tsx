@@ -39,7 +39,7 @@ export function Skills() {
                       className="flex items-center gap-2 rounded-lg bg-muted/60 px-3 py-2.5 text-sm transition-colors hover:bg-muted"
                     >
                       <skill.icon className="size-4 shrink-0 text-primary" />
-                      <span className="truncate">{skill.name}</span>
+                      <span className="min-w-0 leading-snug">{skill.name}</span>
                     </div>
                   ))}
                 </div>

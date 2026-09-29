@@ -24,7 +24,7 @@ export function Projects() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (
             <Reveal key={project.title} delay={i * 0.1}>
-              <Card className="group h-full overflow-hidden pt-0 transition-shadow hover:shadow-xl">
+              <Card className="group flex h-full flex-col overflow-hidden pt-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative aspect-video overflow-hidden">
                   <Image
                     src={project.image}
@@ -40,7 +40,7 @@ export function Projects() {
                   )}
                 </div>
 
-                <CardContent className="pt-5">
+                <CardContent className="flex flex-1 flex-col pt-5">
                   <div className="mb-2 flex items-center justify-between gap-2">
                     <h3 className="text-lg font-bold">{project.title}</h3>
                     <Badge variant="muted">{project.status}</Badge>
@@ -55,7 +55,7 @@ export function Projects() {
                     ))}
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="mt-auto flex gap-2">
                     {project.live && (
                       <Button asChild size="sm">
                         <a href={project.live} target="_blank" rel="noreferrer">

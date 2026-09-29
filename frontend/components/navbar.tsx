@@ -33,7 +33,7 @@ export function Navbar() {
           Keshav<span className="text-primary">.</span>
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
@@ -54,7 +54,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             aria-label="Toggle menu"
             onClick={() => setOpen((v) => !v)}
           >
@@ -64,7 +64,7 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t bg-background/95 px-4 py-3 backdrop-blur-md md:hidden">
+        <div className="border-t bg-background/95 px-4 py-3 backdrop-blur-md lg:hidden">
           <ul className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <li key={link.href}>

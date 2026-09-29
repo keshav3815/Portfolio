@@ -5,6 +5,7 @@ import {
   Bot,
   Boxes,
   Braces,
+  Briefcase,
   Cloud,
   Code2,
   Component,
@@ -20,6 +21,7 @@ import {
   Frame,
   Gauge,
   GitBranch,
+  GraduationCap,
   KeyRound,
   Layers,
   LayoutGrid,
@@ -30,6 +32,7 @@ import {
   Network,
   PanelsTopLeft,
   RadioTower,
+  Rocket,
   Route,
   Send,
   Server,
@@ -308,6 +311,83 @@ export const certifications: Certification[] = [
   },
 ];
 
+export type JourneyMilestone = {
+  date: string;
+  chapter: string;
+  title: string;
+  org: string;
+  description: string;
+  icon: LucideIcon;
+  current?: boolean;
+};
+
+export const journey: JourneyMilestone[] = [
+  {
+    date: "2022",
+    chapter: "The Beginning",
+    title: "Started B.E. Computer Science",
+    org: "Chandigarh University",
+    description:
+      "Wrote my first real programs and fell for the question behind every system: how does this actually work under the hood?",
+    icon: GraduationCap,
+  },
+  {
+    date: "2023",
+    chapter: "Going Deeper",
+    title: "Multi-Core Computer Architecture — Elite",
+    org: "NPTEL · IIT Guwahati",
+    description:
+      "Parallel processing and multi-core design — the systems thinking that later shaped how I build async backends.",
+    icon: Layers,
+  },
+  {
+    date: "2024",
+    chapter: "Exploring",
+    title: "IoT, Blockchain & Smart Contracts",
+    org: "SWAYAM · Metacrafters · Infosys Springboard",
+    description:
+      "Branched out into connected systems and shipped smart contracts on Ethereum & Polygon — learning by building.",
+    icon: Boxes,
+  },
+  {
+    date: "2024 – 25",
+    chapter: "First Clients",
+    title: "Freelance & community builds",
+    org: "Oz Builders Depot · Spice Route · TRV Tech · APC Bheja",
+    description:
+      "Turned skills into shipped products — client websites for businesses in Australia and India, and a community platform for an NGO.",
+    icon: Code2,
+  },
+  {
+    date: "Feb 2026",
+    chapter: "Going Pro",
+    title: "Gen-AI Engineer",
+    org: "Simplifyai",
+    description:
+      "Built the co-lending module for SimplifyCredit — ~35 backend services, an append-only sub-ledger, settlement & reconciliation on FastAPI, PostgreSQL and Celery/Redis.",
+    icon: Briefcase,
+  },
+  {
+    date: "2026",
+    chapter: "AI in Production",
+    title: "SimplifyInsights",
+    org: "Simplifyai",
+    description:
+      "Analytics for 945+ listed companies: async XBRL ingestion at ~96% coverage, XGBoost credit-scoring, and an SSE-streamed RAG chatbot behind a governed LLM orchestrator.",
+    icon: Bot,
+  },
+  {
+    date: "Now",
+    chapter: "Next Chapter",
+    title: "Building what's next",
+    org: "Open to new opportunities",
+    description:
+      "Finishing my degree and looking for the next hard problem in backend and GenAI engineering. Maybe it's yours?",
+    icon: Rocket,
+    current: true,
+  },
+];
+
 export const social = {
   email: "keshavsingh3815@gmail.com",
   github: "https://github.com/keshav3815",
@@ -318,6 +398,7 @@ export const social = {
 export const navLinks = [
   { label: "Home", href: "#home" },
   { label: "About", href: "#about" },
+  { label: "Journey", href: "#journey" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Certifications", href: "#certifications" },

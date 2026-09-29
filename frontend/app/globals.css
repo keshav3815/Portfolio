@@ -28,9 +28,6 @@
   --input: oklch(0.92 0.01 265);
   --ring: oklch(0.55 0.22 264);
 
-  /* Plain sRGB channels for the <canvas> particle network — canvas 2D can't
-     parse oklch(), and getComputedStyle() now returns oklch() verbatim. */
-  --particle-rgb: 99 102 241;
 }
 
 .dark {
@@ -56,7 +53,6 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.65 0.2 264);
 
-  --particle-rgb: 129 140 248;
 }
 
 @theme inline {
